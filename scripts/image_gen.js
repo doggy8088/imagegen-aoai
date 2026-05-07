@@ -4,7 +4,7 @@ import path from "node:path";
 import { Blob } from "node:buffer";
 
 const DEFAULT_MODEL = "gpt-image-2";
-const DEFAULT_AZURE_OPENAI_API_VERSION = "2025-04-01-preview";
+const DEFAULT_IMAGEGEN_AZURE_OPENAI_API_VERSION = "2025-04-01-preview";
 const DEFAULT_SIZE = "auto";
 const DEFAULT_QUALITY = "medium";
 const DEFAULT_OUTPUT_FORMAT = "png";
@@ -36,17 +36,17 @@ function parseInteger(value, label) {
 }
 
 function azureApiVersion() {
-  return process.env.AZURE_OPENAI_API_VERSION
+  return process.env.IMAGEGEN_AZURE_OPENAI_API_VERSION
     || process.env.OPENAI_API_VERSION
-    || DEFAULT_AZURE_OPENAI_API_VERSION;
+    || DEFAULT_IMAGEGEN_AZURE_OPENAI_API_VERSION;
 }
 
 function defaultModel() {
-  return process.env.AZURE_OPENAI_IMAGE_DEPLOYMENT || DEFAULT_MODEL;
+  return process.env.IMAGEGEN_AZURE_OPENAI_IMAGE_DEPLOYMENT || DEFAULT_MODEL;
 }
 
 function ensureApiKey(dryRun) {
-  const missing = ["AZURE_OPENAI_ENDPOINT", "AZURE_OPENAI_API_KEY"].filter((name) => !process.env[name]);
+  const missing = ["IMAGEGEN_AZURE_OPENAI_ENDPOINT", "IMAGEGEN_AZURE_OPENAI_API_KEY"].filter((name) => !process.env[name]);
   if (missing.length === 0) {
     console.error(`Azure OpenAI environment is set (api-version ${azureApiVersion()}).`);
     return;
@@ -400,7 +400,7 @@ function sleep(ms) {
 }
 
 function azureEndpoint(route, model) {
-  const endpoint = process.env.AZURE_OPENAI_ENDPOINT.replace(/\/+$/, "");
+  const endpoint = process.env.IMAGEGEN_AZURE_OPENAI_ENDPOINT.replace(/\/+$/, "");
   return `${endpoint}/openai/deployments/${encodeURIComponent(model)}/${route}?api-version=${encodeURIComponent(azureApiVersion())}`;
 }
 
@@ -408,7 +408,7 @@ async function azureFetch(url, options) {
   const response = await fetch(url, {
     ...options,
     headers: {
-      "api-key": process.env.AZURE_OPENAI_API_KEY,
+      "api-key": process.env.IMAGEGEN_AZURE_OPENAI_API_KEY,
       ...(options.headers || {}),
     },
   });

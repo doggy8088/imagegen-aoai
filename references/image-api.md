@@ -43,9 +43,9 @@ Square images are typically fastest to generate. For 4K-style output, use `3840x
 
 ## Azure OpenAI setup
 - Client: `AzureOpenAI(...)` / `AsyncAzureOpenAI(...)` from the `openai` Python package.
-- Required environment: `AZURE_OPENAI_ENDPOINT` and `AZURE_OPENAI_API_KEY`.
-- Optional environment: `AZURE_OPENAI_API_VERSION` (defaults to `2025-04-01-preview`) and `AZURE_OPENAI_IMAGE_DEPLOYMENT` (defaults to `gpt-image-2`).
-- In Azure OpenAI, the `model` parameter is the image deployment name. It can be supplied with `--model` or defaulted from `AZURE_OPENAI_IMAGE_DEPLOYMENT`, falling back to `gpt-image-2`.
+- Required environment: `IMAGEGEN_AZURE_OPENAI_ENDPOINT` and `IMAGEGEN_AZURE_OPENAI_API_KEY`.
+- Optional environment: `IMAGEGEN_AZURE_OPENAI_API_VERSION` (defaults to `2025-04-01-preview`) and `IMAGEGEN_AZURE_OPENAI_IMAGE_DEPLOYMENT` (defaults to `gpt-image-2`).
+- In Azure OpenAI, the `model` parameter is the image deployment name. It can be supplied with `--model` or defaulted from `IMAGEGEN_AZURE_OPENAI_IMAGE_DEPLOYMENT`, falling back to `gpt-image-2`.
 
 ## Endpoints
 - Generate: `POST /openai/deployments/{deployment}/images/generations?api-version=...` (`client.images.generate(...)`)

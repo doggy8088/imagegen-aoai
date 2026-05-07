@@ -41,7 +41,7 @@ Generate (requires Azure OpenAI credentials + network):
 
 ```bash
 node "$IMAGE_GEN" generate \
-  --model "$AZURE_OPENAI_IMAGE_DEPLOYMENT" \
+  --model "$IMAGEGEN_AZURE_OPENAI_IMAGE_DEPLOYMENT" \
   --prompt "A cozy alpine cabin at dawn" \
   --size 1024x1024 \
   --out output/imagegen/alpine-cabin.png
@@ -64,7 +64,7 @@ node "$IMAGE_GEN" edit \
 
 ## Defaults
 - Model: `gpt-image-2`
-- In Azure OpenAI, `--model` is the image deployment name. It defaults to `AZURE_OPENAI_IMAGE_DEPLOYMENT` when set, otherwise `gpt-image-2`.
+- In Azure OpenAI, `--model` is the image deployment name. It defaults to `IMAGEGEN_AZURE_OPENAI_IMAGE_DEPLOYMENT` when set, otherwise `gpt-image-2`.
 - Supported model family for this CLI: GPT Image models (`gpt-image-*`)
 - Size: `auto`
 - Quality: `medium`
@@ -136,7 +136,7 @@ Ask for confirmation before using this command unless the user already explicitl
 
 ```bash
 node "$IMAGE_GEN" generate \
-  --model "$AZURE_OPENAI_IMAGE_DEPLOYMENT" \
+  --model "$IMAGEGEN_AZURE_OPENAI_IMAGE_DEPLOYMENT" \
   --prompt "A clean product cutout on a transparent background" \
   --background transparent \
   --output-format png \
@@ -156,7 +156,7 @@ Example:
 
 ```bash
 node "$IMAGE_GEN" edit \
-  --model "$AZURE_OPENAI_IMAGE_DEPLOYMENT" \
+  --model "$IMAGEGEN_AZURE_OPENAI_IMAGE_DEPLOYMENT" \
   --image input.png \
   --prompt "Change only the background" \
   --quality high \
@@ -186,14 +186,14 @@ Mask notes:
 Set these before live CLI calls:
 
 ```bash
-export AZURE_OPENAI_ENDPOINT="https://<resource-name>.openai.azure.com"
-export AZURE_OPENAI_API_KEY="<key>"
-export AZURE_OPENAI_IMAGE_DEPLOYMENT="${AZURE_OPENAI_IMAGE_DEPLOYMENT:-gpt-image-2}"
+export IMAGEGEN_AZURE_OPENAI_ENDPOINT="https://<resource-name>.openai.azure.com"
+export IMAGEGEN_AZURE_OPENAI_API_KEY="<key>"
+export IMAGEGEN_AZURE_OPENAI_IMAGE_DEPLOYMENT="${IMAGEGEN_AZURE_OPENAI_IMAGE_DEPLOYMENT:-gpt-image-2}"
 # Optional; defaults to 2025-04-01-preview.
-export AZURE_OPENAI_API_VERSION="2025-04-01-preview"
+export IMAGEGEN_AZURE_OPENAI_API_VERSION="2025-04-01-preview"
 ```
 
-The CLI also accepts `OPENAI_API_VERSION` for compatibility when `AZURE_OPENAI_API_VERSION` is not set.
+The CLI also accepts `OPENAI_API_VERSION` for compatibility when `IMAGEGEN_AZURE_OPENAI_API_VERSION` is not set.
 
 ## Common recipes
 

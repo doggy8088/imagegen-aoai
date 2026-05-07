@@ -44,19 +44,19 @@
 Fallback CLI 的 live API call 需要設定下列環境變數：
 
 ```bash
-export AZURE_OPENAI_ENDPOINT="https://<resource-name>.openai.azure.com"
-export AZURE_OPENAI_API_KEY="<key>"
-export AZURE_OPENAI_IMAGE_DEPLOYMENT="${AZURE_OPENAI_IMAGE_DEPLOYMENT:-gpt-image-2}"
-export AZURE_OPENAI_API_VERSION="2025-04-01-preview"
+export IMAGEGEN_AZURE_OPENAI_ENDPOINT="https://<resource-name>.openai.azure.com"
+export IMAGEGEN_AZURE_OPENAI_API_KEY="<key>"
+export IMAGEGEN_AZURE_OPENAI_IMAGE_DEPLOYMENT="${IMAGEGEN_AZURE_OPENAI_IMAGE_DEPLOYMENT:-gpt-image-2}"
+export IMAGEGEN_AZURE_OPENAI_API_VERSION="2025-04-01-preview"
 ```
 
 說明：
 
-- `AZURE_OPENAI_ENDPOINT`：Azure OpenAI resource endpoint，格式為 `https://<resource-name>.openai.azure.com`，只填到 resource host，不要包含 `/openai/deployments/...`、模型名稱或 API version。範例：`https://my-image-resource.openai.azure.com`。
-- `AZURE_OPENAI_API_KEY`：Azure OpenAI API key。
-- `AZURE_OPENAI_IMAGE_DEPLOYMENT`：Azure OpenAI image deployment 名稱，預設為 `gpt-image-2`。
-- `AZURE_OPENAI_API_VERSION`：API version，預設為 `2025-04-01-preview`。
-- 若未設定 `AZURE_OPENAI_API_VERSION`，CLI 也會接受 `OPENAI_API_VERSION` 作為相容 fallback。
+- `IMAGEGEN_AZURE_OPENAI_ENDPOINT`：Azure OpenAI resource endpoint，格式為 `https://<resource-name>.openai.azure.com`，只填到 resource host，不要包含 `/openai/deployments/...`、模型名稱或 API version。範例：`https://my-image-resource.openai.azure.com`。
+- `IMAGEGEN_AZURE_OPENAI_API_KEY`：Azure OpenAI API key。
+- `IMAGEGEN_AZURE_OPENAI_IMAGE_DEPLOYMENT`：Azure OpenAI image deployment 名稱，預設為 `gpt-image-2`。
+- `IMAGEGEN_AZURE_OPENAI_API_VERSION`：API version，預設為 `2025-04-01-preview`。
+- 若未設定 `IMAGEGEN_AZURE_OPENAI_API_VERSION`，CLI 也會接受 `OPENAI_API_VERSION` 作為相容 fallback。
 
 > 注意：在 Azure OpenAI 中，CLI 的 `--model` 參數代表 deployment name，不一定等於 base model name。
 
@@ -131,12 +131,12 @@ node "$IMAGE_GEN" generate-batch \
 
 | 設定 | 預設值 |
 | --- | --- |
-| Model / deployment | `AZURE_OPENAI_IMAGE_DEPLOYMENT`，未設定時為 `gpt-image-2` |
+| Model / deployment | `IMAGEGEN_AZURE_OPENAI_IMAGE_DEPLOYMENT`，未設定時為 `gpt-image-2` |
 | Size | `auto` |
 | Quality | `medium` |
 | Output format | `png` |
 | Output path | `output/imagegen/output.png` |
-| API version | `AZURE_OPENAI_API_VERSION`，未設定時為 `2025-04-01-preview` |
+| API version | `IMAGEGEN_AZURE_OPENAI_API_VERSION`，未設定時為 `2025-04-01-preview` |
 
 ## 常用參數
 

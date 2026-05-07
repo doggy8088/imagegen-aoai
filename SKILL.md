@@ -312,16 +312,16 @@ Portability note:
 - The CLI uses Node built-in `fetch` for Azure OpenAI calls and `sharp` for local chroma-key removal/downscaling.
 
 ### Environment
-- `AZURE_OPENAI_ENDPOINT` and `AZURE_OPENAI_API_KEY` must be set for live API calls.
-- `AZURE_OPENAI_API_VERSION` is optional; the CLI defaults to `2025-04-01-preview`. `OPENAI_API_VERSION` is also accepted for compatibility.
-- `AZURE_OPENAI_IMAGE_DEPLOYMENT` is optional; it supplies the default `--model` value when set. Otherwise `--model` defaults to `gpt-image-2`.
+- `IMAGEGEN_AZURE_OPENAI_ENDPOINT` and `IMAGEGEN_AZURE_OPENAI_API_KEY` must be set for live API calls.
+- `IMAGEGEN_AZURE_OPENAI_API_VERSION` is optional; the CLI defaults to `2025-04-01-preview`. `OPENAI_API_VERSION` is also accepted for compatibility.
+- `IMAGEGEN_AZURE_OPENAI_IMAGE_DEPLOYMENT` is optional; it supplies the default `--model` value when set. Otherwise `--model` defaults to `gpt-image-2`.
 - In Azure OpenAI, `--model` is the image deployment name, not necessarily the base model name.
 - Never ask the user to paste the full key in chat. Ask them to set it locally and confirm when ready.
 
 If the key is missing, give the user these steps:
 1. Create or locate an Azure OpenAI resource with an image model deployment.
-2. Set `AZURE_OPENAI_ENDPOINT` and `AZURE_OPENAI_API_KEY` as environment variables.
-3. Optionally set `AZURE_OPENAI_API_VERSION` and `AZURE_OPENAI_IMAGE_DEPLOYMENT`.
+2. Set `IMAGEGEN_AZURE_OPENAI_ENDPOINT` and `IMAGEGEN_AZURE_OPENAI_API_KEY` as environment variables.
+3. Optionally set `IMAGEGEN_AZURE_OPENAI_API_VERSION` and `IMAGEGEN_AZURE_OPENAI_IMAGE_DEPLOYMENT`.
 4. Offer to guide them through setting the environment variables for their OS/shell if needed.
 
 If installation is not possible in this environment, tell the user which dependency is missing and how to install it into their active environment.
