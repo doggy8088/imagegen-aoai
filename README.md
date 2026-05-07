@@ -1,5 +1,7 @@
 # Image Generation Skill for Azure OpenAI
 
+![imagegen-aoai banner](assets/imagegen-aoai.png)
+
 這是一個 GitHub Copilot CLI skill，用來產生或編輯點陣圖影像資產，例如網站 hero image、產品圖、遊戲素材、UI mockup、插圖、資訊圖表與透明背景 cutout。
 
 此版本的 CLI 使用 Azure OpenAI Image API，不再使用 OpenAI API。
@@ -21,6 +23,7 @@
 ├── agents/
 │   └── openai.yaml
 ├── assets/
+│   ├── imagegen-aoai.png
 │   ├── imagegen.png
 │   └── imagegen-small.svg
 ├── references/
