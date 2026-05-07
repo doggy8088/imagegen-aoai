@@ -29,14 +29,15 @@
 │   ├── image-api.md
 │   ├── prompting.md
 │   └── sample-prompts.md
+├── package.json
 └── scripts/
-    ├── image_gen.py
-    └── remove_chroma_key.py
+    ├── image_gen.js
+    └── remove_chroma_key.js
 ```
 
 ## 使用模式
 
-這個 skill 使用 `scripts/image_gen.py` 直接呼叫 Azure OpenAI Image API。GitHub Copilot CLI 沒有內建影像產生或影像檢視工具，因此此 skill 不會依賴不存在的內建工具。
+這個 skill 使用 `scripts/image_gen.js` 直接呼叫 Azure OpenAI Image API。GitHub Copilot CLI 沒有內建影像產生或影像檢視工具，因此此 skill 不會依賴不存在的內建工具。
 
 ## Azure OpenAI 設定
 
@@ -61,16 +62,10 @@ export AZURE_OPENAI_API_VERSION="2025-04-01-preview"
 
 ## 安裝相依套件
 
-Fallback CLI 需要 OpenAI Python SDK，Azure OpenAI client 也由此套件提供：
+Fallback CLI 需要 Node.js 與 npm 套件。Azure OpenAI 呼叫使用 Node 內建 `fetch`，本機縮圖與透明背景後處理使用 `sharp`：
 
 ```bash
-uv pip install openai
-```
-
-如果需要本機縮圖或透明背景後處理，也需要 Pillow：
-
-```bash
-uv pip install pillow
+npm install
 ```
 
 ## CLI 快速開始
@@ -79,7 +74,7 @@ uv pip install pillow
 
 ```bash
 export CODEX_HOME="${CODEX_HOME:-$HOME/.codex}"
-export IMAGE_GEN="$CODEX_HOME/skills/.system/imagegen/scripts/image_gen.py"
+export IMAGE_GEN="$CODEX_HOME/skills/.system/imagegen/scripts/image_gen.js"
 ```
 
 ### Dry-run
@@ -87,7 +82,7 @@ export IMAGE_GEN="$CODEX_HOME/skills/.system/imagegen/scripts/image_gen.py"
 Dry-run 不會呼叫 API，也不需要網路：
 
 ```bash
-python "$IMAGE_GEN" generate \
+node "$IMAGE_GEN" generate \
   --prompt "Test" \
   --out output/imagegen/test.png \
   --dry-run
@@ -96,7 +91,7 @@ python "$IMAGE_GEN" generate \
 ### 產生影像
 
 ```bash
-python "$IMAGE_GEN" generate \
+node "$IMAGE_GEN" generate \
   --prompt "A cozy alpine cabin at dawn" \
   --size 1024x1024 \
   --out output/imagegen/alpine-cabin.png
@@ -105,7 +100,7 @@ python "$IMAGE_GEN" generate \
 ### 編輯影像
 
 ```bash
-python "$IMAGE_GEN" edit \
+node "$IMAGE_GEN" edit \
   --image input.png \
   --prompt "Replace only the background with a warm sunset" \
   --out output/imagegen/sunset-edit.png
@@ -126,7 +121,7 @@ EOF
 執行批次工作：
 
 ```bash
-python "$IMAGE_GEN" generate-batch \
+node "$IMAGE_GEN" generate-batch \
   --input tmp/imagegen/prompts.jsonl \
   --out-dir output/imagegen/batch \
   --concurrency 5
@@ -168,7 +163,7 @@ python "$IMAGE_GEN" generate-batch \
 `gpt-image-2` 不支援 `background=transparent`。若需要 true native transparency，請使用 Azure OpenAI 的 `gpt-image-1.5` deployment，並搭配：
 
 ```bash
-python "$IMAGE_GEN" generate \
+node "$IMAGE_GEN" generate \
   --model "<gpt-image-1.5-deployment-name>" \
   --prompt "A clean product cutout on a transparent background" \
   --background transparent \

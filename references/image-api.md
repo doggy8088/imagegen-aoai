@@ -1,6 +1,6 @@
 # Image API quick reference
 
-This file documents the CLI/API/model controls used by `scripts/image_gen.py`, including the `gpt-image-1.5` true-transparency path.
+This file documents the CLI/API/model controls used by `scripts/image_gen.js`, including the `gpt-image-1.5` true-transparency path.
 
 These parameters describe the Image API and bundled CLI surface.
 
@@ -74,13 +74,13 @@ Model-specific note for `input_fidelity`:
 
 ## Transparent backgrounds
 
-`gpt-image-2` does not currently support the Image API `background=transparent` parameter. The skill's default transparent-image path is `gpt-image-2` with a flat chroma-key background, followed by local alpha extraction with `python "${CODEX_HOME:-$HOME/.codex}/skills/.system/imagegen/scripts/remove_chroma_key.py"`.
+`gpt-image-2` does not currently support the Image API `background=transparent` parameter. The skill's default transparent-image path is `gpt-image-2` with a flat chroma-key background, followed by local alpha extraction with `node "${CODEX_HOME:-$HOME/.codex}/skills/.system/imagegen/scripts/remove_chroma_key.js"`.
 
-Use CLI `gpt-image-1.5` with `background=transparent` and a transparent-capable output format such as `png` or `webp` only after the user explicitly confirms that path, unless they already requested `gpt-image-1.5` or `scripts/image_gen.py`. If the user asks for true/native transparency, the subject is too complex for clean chroma-key removal, or local background removal fails validation, explain the tradeoff and ask before switching.
+Use CLI `gpt-image-1.5` with `background=transparent` and a transparent-capable output format such as `png` or `webp` only after the user explicitly confirms that path, unless they already requested `gpt-image-1.5` or `scripts/image_gen.js`. If the user asks for true/native transparency, the subject is too complex for clean chroma-key removal, or local background removal fails validation, explain the tradeoff and ask before switching.
 
 ## Output
 - `data[]` list with `b64_json` per image
-- The bundled `scripts/image_gen.py` CLI decodes `b64_json` and writes output files for you.
+- The bundled `scripts/image_gen.js` CLI decodes `b64_json` and writes output files for you.
 
 ## Limits and notes
 - Input images and masks must be under 50MB.

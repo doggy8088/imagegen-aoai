@@ -1,0 +1,20 @@
+{
+  "name": "imagegen-aoai",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Azure OpenAI image generation skill CLI helpers.",
+  "bin": {
+    "image_gen": "./scripts/image_gen.js",
+    "remove_chroma_key": "./scripts/remove_chroma_key.js"
+  },
+  "scripts": {
+    "check": "node --check scripts/image_gen.js && node --check scripts/remove_chroma_key.js"
+  },
+  "dependencies": {
+    "sharp": "^0.34.5"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

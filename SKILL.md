@@ -9,7 +9,7 @@ Generates or edits images for the current project (for example website assets, g
 
 ## Execution mode and rules
 
-This skill uses the bundled Azure OpenAI CLI at `scripts/image_gen.py`. GitHub Copilot CLI does not provide built-in image-generation or image-viewing tools, so do not reference or attempt to use nonexistent built-ins.
+This skill uses the bundled Azure OpenAI CLI at `scripts/image_gen.js`. GitHub Copilot CLI does not provide built-in image-generation or image-viewing tools, so do not reference or attempt to use nonexistent built-ins.
 
 The CLI exposes three subcommands:
 
@@ -18,14 +18,14 @@ The CLI exposes three subcommands:
 - `generate-batch`
 
 Rules:
-- Use `scripts/image_gen.py` for normal image generation and editing requests.
-- If the user explicitly asks for a transparent image/background, start with the default `gpt-image-2` chroma-key workflow: prompt for a flat removable chroma-key background, then remove it locally with the installed helper at `$CODEX_HOME/skills/.system/imagegen/scripts/remove_chroma_key.py`.
-- Never silently switch from CLI `gpt-image-2` to CLI `gpt-image-1.5`. Treat this as a model/path downgrade and ask the user before doing it, unless the user has already explicitly requested `gpt-image-1.5` or `scripts/image_gen.py`.
+- Use `scripts/image_gen.js` for normal image generation and editing requests.
+- If the user explicitly asks for a transparent image/background, start with the default `gpt-image-2` chroma-key workflow: prompt for a flat removable chroma-key background, then remove it locally with the installed helper at `$CODEX_HOME/skills/.system/imagegen/scripts/remove_chroma_key.js`.
+- Never silently switch from CLI `gpt-image-2` to CLI `gpt-image-1.5`. Treat this as a model/path downgrade and ask the user before doing it, unless the user has already explicitly requested `gpt-image-1.5` or `scripts/image_gen.js`.
 - If a transparent request appears too complex for clean chroma-key removal, asks for true/native transparency, or local removal fails validation, explain that true transparency requires CLI `gpt-image-1.5 --background transparent --output-format png` because `gpt-image-2` does not support `background=transparent`, then ask whether to proceed. Run the `gpt-image-1.5` path only after the user confirms.
 - The word `batch` by itself does not require `generate-batch`. Use `generate-batch` when a multi-asset request is naturally represented as a JSONL batch; otherwise run individual CLI commands.
 - Live API calls require Azure OpenAI credentials and network access.
-- Use the bundled `scripts/image_gen.py` workflow. Do not create one-off SDK runners.
-- Never modify `scripts/image_gen.py`. If something is missing, ask the user before doing anything else.
+- Use the bundled `scripts/image_gen.js` workflow. Do not create one-off SDK runners.
+- Never modify `scripts/image_gen.js`. If something is missing, ask the user before doing anything else.
 
 Output policy:
 - Write generated assets directly to the requested path, or to `output/imagegen/` when the user does not specify a path.
@@ -38,10 +38,10 @@ CLI docs/resources:
 - `references/cli.md`
 - `references/image-api.md`
 - `references/codex-network.md`
-- `scripts/image_gen.py`
+- `scripts/image_gen.js`
 
 Local post-processing helper:
-- `$CODEX_HOME/skills/.system/imagegen/scripts/remove_chroma_key.py`: removes a flat chroma-key background from a generated image and writes a PNG/WebP with alpha. Prefer auto-key sampling, soft matte, and despill for antialiased edges.
+- `$CODEX_HOME/skills/.system/imagegen/scripts/remove_chroma_key.js`: removes a flat chroma-key background from a generated image and writes a PNG/WebP with alpha. Prefer auto-key sampling, soft matte, and despill for antialiased edges.
 
 ## When to use
 - Generate a new image (concept art, product shot, cover, website hero)
@@ -94,8 +94,8 @@ Assume the user wants a new image unless they clearly ask to change an existing 
 9. Augment the prompt based on specificity:
    - If the user's prompt is already specific and detailed, normalize it into a clear spec without adding creative requirements.
    - If the user's prompt is generic, add tasteful augmentation only when it materially improves output quality.
-10. Use `scripts/image_gen.py` with `gpt-image-2` by default.
-11. For transparent-output requests, follow the transparent image guidance below: generate on a flat chroma-key background, run the installed `$CODEX_HOME/skills/.system/imagegen/scripts/remove_chroma_key.py` helper, and validate the alpha result before using it. If this path looks unsuitable or fails, ask before switching to CLI `gpt-image-1.5`.
+10. Use `scripts/image_gen.js` with `gpt-image-2` by default.
+11. For transparent-output requests, follow the transparent image guidance below: generate on a flat chroma-key background, run the installed `$CODEX_HOME/skills/.system/imagegen/scripts/remove_chroma_key.js` helper, and validate the alpha result before using it. If this path looks unsuitable or fails, ask before switching to CLI `gpt-image-1.5`.
 12. Inspect outputs and validate: subject, style, composition, text accuracy, and invariants/avoid items.
 13. Iterate with a single targeted change, then re-check.
 14. For preview-only work, write to `output/imagegen/` unless the user asked for a different location.
@@ -109,12 +109,12 @@ Assume the user wants a new image unless they clearly ask to change an existing 
 Transparent-image requests use the default `gpt-image-2` chroma-key workflow first. Because `gpt-image-2` does not expose a true transparent-background control, create a removable chroma-key source image and then convert the key color to alpha locally.
 
 Default sequence:
-1. Use `scripts/image_gen.py generate` to generate the requested subject on a perfectly flat solid chroma-key background.
+1. Use `scripts/image_gen.js generate` to generate the requested subject on a perfectly flat solid chroma-key background.
 2. Choose a key color that is unlikely to appear in the subject: default `#00ff00`, use `#ff00ff` for green subjects, and avoid `#0000ff` for blue subjects.
 3. After generation, keep the chroma-key source image in the workspace or `tmp/imagegen/`.
 4. Run the installed helper path, not a project-relative script path:
    ```bash
-   python "${CODEX_HOME:-$HOME/.codex}/skills/.system/imagegen/scripts/remove_chroma_key.py" \
+   node "${CODEX_HOME:-$HOME/.codex}/skills/.system/imagegen/scripts/remove_chroma_key.js" \
      --input <source> \
      --out <final.png> \
      --auto-key border \
@@ -274,7 +274,7 @@ Asset-type templates (website assets, game assets, wireframes, logo) are consoli
 The CLI defaults to `gpt-image-2`.
 
 - Use `gpt-image-2` for new CLI/API workflows unless the request needs true model-native transparent output.
-- If a transparent request may need true transparency, ask before using `gpt-image-1.5` unless the user already explicitly requested `gpt-image-1.5` or `scripts/image_gen.py`. Explain that the chroma-key path is the default, but true transparency requires `gpt-image-1.5` because `gpt-image-2` does not support `background=transparent`.
+- If a transparent request may need true transparency, ask before using `gpt-image-1.5` unless the user already explicitly requested `gpt-image-1.5` or `scripts/image_gen.js`. Explain that the chroma-key path is the default, but true transparency requires `gpt-image-1.5` because `gpt-image-2` does not support `background=transparent`.
 - `gpt-image-2` always uses high fidelity for image inputs; do not set `input_fidelity` with this model.
 - `gpt-image-2` supports `quality` values `low`, `medium`, `high`, and `auto`.
 - Use `quality low` for fast drafts, thumbnails, and quick iterations. Use `medium`, `high`, or `auto` for final assets, dense text, diagrams, identity-sensitive edits, or high-resolution outputs.
@@ -300,21 +300,16 @@ Popular `gpt-image-2` sizes:
 - Use `--out` or `--out-dir` to control output paths; keep filenames stable and descriptive.
 
 ### Dependencies
-Prefer `uv` for dependency management in this repo.
+Use npm for dependency management in this repo.
 
-Required Python package:
+Required Node packages:
 ```bash
-uv pip install openai
-```
-
-Required for local chroma-key removal and optional downscaling:
-```bash
-uv pip install pillow
+npm install
 ```
 
 Portability note:
 - If you are using the installed skill outside this repo, install dependencies into that environment with its package manager.
-- In uv-managed environments, `uv pip install ...` remains the preferred path.
+- The CLI uses Node built-in `fetch` for Azure OpenAI calls and `sharp` for local chroma-key removal/downscaling.
 
 ### Environment
 - `AZURE_OPENAI_ENDPOINT` and `AZURE_OPENAI_API_KEY` must be set for live API calls.
@@ -339,8 +334,8 @@ If installation is not possible in this environment, tell the user which depende
 ## Reference map
 - `references/prompting.md`: shared prompting principles for both modes.
 - `references/sample-prompts.md`: shared copy/paste prompt recipes for both modes.
-- `references/cli.md`: CLI usage via `scripts/image_gen.py`.
+- `references/cli.md`: CLI usage via `scripts/image_gen.js`.
 - `references/image-api.md`: API/CLI parameter reference.
 - `references/codex-network.md`: network/sandbox troubleshooting for CLI mode.
-- `scripts/image_gen.py`: CLI implementation.
-- `$CODEX_HOME/skills/.system/imagegen/scripts/remove_chroma_key.py`: local post-processing helper for transparent-image requests.
+- `scripts/image_gen.js`: CLI implementation.
+- `$CODEX_HOME/skills/.system/imagegen/scripts/remove_chroma_key.js`: local post-processing helper for transparent-image requests.

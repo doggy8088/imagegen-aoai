@@ -1,6 +1,6 @@
 # Codex network approvals / sandbox notes
 
-This file is for CLI mode. Read it when using `scripts/image_gen.py` / CLI / API / model controls, or after the user explicitly confirms that a transparent-output request should use the `gpt-image-1.5` true-transparency path.
+This file is for CLI mode. Read it when using `scripts/image_gen.js` / CLI / API / model controls, or after the user explicitly confirms that a transparent-output request should use the `gpt-image-1.5` true-transparency path.
 
 This guidance is intentionally isolated from `SKILL.md` because it can vary by environment and may become stale. Prefer the defaults in your environment when in doubt.
 

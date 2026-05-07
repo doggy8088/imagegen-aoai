@@ -1,6 +1,6 @@
-# CLI reference (`scripts/image_gen.py`)
+# CLI reference (`scripts/image_gen.js`)
 
-This file documents the bundled CLI mode. Use it for image generation/editing through `scripts/image_gen.py` and for API/model controls, including the `gpt-image-1.5` true-transparency path.
+This file documents the bundled CLI mode. Use it for image generation/editing through `scripts/image_gen.js` and for API/model controls, including the `gpt-image-1.5` true-transparency path.
 
 `generate-batch` is a CLI subcommand. It is not a top-level mode of the skill.
 The word `batch` in a user request does not always require `generate-batch`.
@@ -17,17 +17,17 @@ Set a stable path to the skill CLI (default `CODEX_HOME` is `~/.codex`):
 
 ```
 export CODEX_HOME="${CODEX_HOME:-$HOME/.codex}"
-export IMAGE_GEN="$CODEX_HOME/skills/.system/imagegen/scripts/image_gen.py"
+export IMAGE_GEN="$CODEX_HOME/skills/.system/imagegen/scripts/image_gen.js"
 ```
 
-Install dependencies into that environment with its package manager. In uv-managed environments, `uv pip install ...` remains the preferred path.
+Install dependencies into that environment with its package manager. In this repo, run `npm install`.
 
 ## Quick start
 
-Dry-run (no API call; no network required; does not require the `openai` package):
+Dry-run (no API call; no network required):
 
 ```bash
-python "$IMAGE_GEN" generate \
+node "$IMAGE_GEN" generate \
   --prompt "Test" \
   --out output/imagegen/test.png \
   --dry-run
@@ -40,7 +40,7 @@ Notes:
 Generate (requires Azure OpenAI credentials + network):
 
 ```bash
-python "$IMAGE_GEN" generate \
+node "$IMAGE_GEN" generate \
   --model "$AZURE_OPENAI_IMAGE_DEPLOYMENT" \
   --prompt "A cozy alpine cabin at dawn" \
   --size 1024x1024 \
@@ -50,17 +50,17 @@ python "$IMAGE_GEN" generate \
 Edit:
 
 ```bash
-python "$IMAGE_GEN" edit \
+node "$IMAGE_GEN" edit \
   --image input.png \
   --prompt "Replace only the background with a warm sunset" \
   --out output/imagegen/sunset-edit.png
 ```
 
 ## Guardrails
-- Use the bundled CLI directly (`python "$IMAGE_GEN" ...`) after activating the correct environment.
+- Use the bundled CLI directly (`node "$IMAGE_GEN" ...`) after activating the correct environment.
 - Do **not** create one-off runners (for example `gen_images.py`) unless the user explicitly asks for a custom wrapper.
-- **Never modify** `scripts/image_gen.py`. If something is missing, ask the user before doing anything else.
-- Do not silently downgrade from CLI `gpt-image-2` to CLI `gpt-image-1.5`; ask first unless the user already explicitly requested `gpt-image-1.5` or `scripts/image_gen.py`.
+- **Never modify** `scripts/image_gen.js`. If something is missing, ask the user before doing anything else.
+- Do not silently downgrade from CLI `gpt-image-2` to CLI `gpt-image-1.5`; ask first unless the user already explicitly requested `gpt-image-1.5` or `scripts/image_gen.js`.
 
 ## Defaults
 - Model: `gpt-image-2`
@@ -81,7 +81,7 @@ python "$IMAGE_GEN" edit \
 - Square images are typically fastest. Use `--size 1024x1024` for quick square drafts.
 - If the user asks for 4K-style output, use `--size 3840x2160` for landscape or `--size 2160x3840` for portrait.
 - Do not pass `--input-fidelity` with `gpt-image-2`; this model always uses high fidelity for image inputs.
-- Do not use `--background transparent` with `gpt-image-2`; the default transparent-image workflow uses `gpt-image-2` on a flat chroma-key background plus local removal. Use `gpt-image-1.5` only after the user explicitly confirms the true-transparent path, unless they already requested `gpt-image-1.5` or `scripts/image_gen.py`.
+- Do not use `--background transparent` with `gpt-image-2`; the default transparent-image workflow uses `gpt-image-2` on a flat chroma-key background plus local removal. Use `gpt-image-1.5` only after the user explicitly confirms the true-transparent path, unless they already requested `gpt-image-1.5` or `scripts/image_gen.js`.
 
 Popular `gpt-image-2` sizes:
 - `1024x1024`
@@ -103,7 +103,7 @@ Popular `gpt-image-2` sizes:
 Fast draft:
 
 ```bash
-python "$IMAGE_GEN" generate \
+node "$IMAGE_GEN" generate \
   --prompt "A product thumbnail of a matte ceramic mug on a stone surface" \
   --quality low \
   --size 1024x1024 \
@@ -113,7 +113,7 @@ python "$IMAGE_GEN" generate \
 Final 2K landscape:
 
 ```bash
-python "$IMAGE_GEN" generate \
+node "$IMAGE_GEN" generate \
   --prompt "A polished landing-page hero image of a matte ceramic mug on a stone surface" \
   --quality high \
   --size 2048x1152 \
@@ -123,7 +123,7 @@ python "$IMAGE_GEN" generate \
 4K landscape:
 
 ```bash
-python "$IMAGE_GEN" generate \
+node "$IMAGE_GEN" generate \
   --prompt "A detailed architectural visualization at golden hour" \
   --size 3840x2160 \
   --quality high \
@@ -132,10 +132,10 @@ python "$IMAGE_GEN" generate \
 
 True transparent request:
 
-Ask for confirmation before using this command unless the user already explicitly requested `gpt-image-1.5` or `scripts/image_gen.py`.
+Ask for confirmation before using this command unless the user already explicitly requested `gpt-image-1.5` or `scripts/image_gen.js`.
 
 ```bash
-python "$IMAGE_GEN" generate \
+node "$IMAGE_GEN" generate \
   --model "$AZURE_OPENAI_IMAGE_DEPLOYMENT" \
   --prompt "A clean product cutout on a transparent background" \
   --background transparent \
@@ -155,7 +155,7 @@ These are explicit CLI controls.
 Example:
 
 ```bash
-python "$IMAGE_GEN" edit \
+node "$IMAGE_GEN" edit \
   --model "$AZURE_OPENAI_IMAGE_DEPLOYMENT" \
   --image input.png \
   --prompt "Change only the background" \
@@ -200,7 +200,7 @@ The CLI also accepts `OPENAI_API_VERSION` for compatibility when `AZURE_OPENAI_A
 Generate with augmentation fields:
 
 ```bash
-python "$IMAGE_GEN" generate \
+node "$IMAGE_GEN" generate \
   --prompt "A minimal hero image of a ceramic coffee mug" \
   --use-case "product-mockup" \
   --style "clean product photography" \
@@ -212,7 +212,7 @@ python "$IMAGE_GEN" generate \
 Generate + also write a downscaled copy for fast web loading:
 
 ```bash
-python "$IMAGE_GEN" generate \
+node "$IMAGE_GEN" generate \
   --prompt "A cozy alpine cabin at dawn" \
   --size 1024x1024 \
   --downscale-max-dim 1024 \
@@ -228,7 +228,7 @@ cat > tmp/imagegen/prompts.jsonl << 'EOF'
 {"prompt":"Gray wolf in profile in a snowy forest","use_case":"photorealistic-natural","composition":"eye-level","constraints":"no logos or trademarks; no watermark","size":"1024x1024"}
 EOF
 
-python "$IMAGE_GEN" generate-batch \
+node "$IMAGE_GEN" generate-batch \
   --input tmp/imagegen/prompts.jsonl \
   --out-dir output/imagegen/batch \
   --concurrency 5
@@ -255,4 +255,4 @@ Notes:
 - API parameter quick reference for CLI mode: `references/image-api.md`
 - Prompt examples shared across both top-level modes: `references/sample-prompts.md`
 - Network/sandbox notes for CLI mode: `references/codex-network.md`
-- Built-in-first transparent image workflow: `SKILL.md` and `$CODEX_HOME/skills/.system/imagegen/scripts/remove_chroma_key.py`
+- Built-in-first transparent image workflow: `SKILL.md` and `$CODEX_HOME/skills/.system/imagegen/scripts/remove_chroma_key.js`
