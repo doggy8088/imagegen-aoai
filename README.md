@@ -2,7 +2,7 @@
 
 這是一個 GitHub Copilot CLI skill，用來產生或編輯點陣圖影像資產，例如網站 hero image、產品圖、遊戲素材、UI mockup、插圖、資訊圖表與透明背景 cutout。
 
-此版本的 fallback CLI 已改為使用 Azure OpenAI Image API，不再使用 OpenAI API。
+此版本的 CLI 使用 Azure OpenAI Image API，不再使用 OpenAI API。
 
 ## 功能特色
 
@@ -36,10 +36,7 @@
 
 ## 使用模式
 
-這個 skill 有兩種主要模式：
-
-1. **內建工具模式**：預設使用 Copilot CLI 的內建 `image_gen` 工具，適合一般產圖、修圖與簡單透明背景需求，不需要 Azure OpenAI credentials。
-2. **Fallback CLI 模式**：使用 `scripts/image_gen.py` 直接呼叫 Azure OpenAI Image API。只有在明確需要 CLI/API/model 控制，或經確認需要 true native transparency fallback 時使用。
+這個 skill 使用 `scripts/image_gen.py` 直接呼叫 Azure OpenAI Image API。GitHub Copilot CLI 沒有內建影像產生或影像檢視工具，因此此 skill 不會依賴不存在的內建工具。
 
 ## Azure OpenAI 設定
 
@@ -54,7 +51,7 @@ export AZURE_OPENAI_API_VERSION="2025-04-01-preview"
 
 說明：
 
-- `AZURE_OPENAI_ENDPOINT`：Azure OpenAI resource endpoint。
+- `AZURE_OPENAI_ENDPOINT`：Azure OpenAI resource endpoint，格式為 `https://<resource-name>.openai.azure.com`，只填到 resource host，不要包含 `/openai/deployments/...`、模型名稱或 API version。範例：`https://my-image-resource.openai.azure.com`。
 - `AZURE_OPENAI_API_KEY`：Azure OpenAI API key。
 - `AZURE_OPENAI_IMAGE_DEPLOYMENT`：Azure OpenAI image deployment 名稱，預設為 `gpt-image-2`。
 - `AZURE_OPENAI_API_VERSION`：API version，預設為 `2025-04-01-preview`。
@@ -164,9 +161,9 @@ python "$IMAGE_GEN" generate-batch \
 
 ## 透明背景策略
 
-一般透明背景需求優先使用內建 `image_gen` 工具產生單色 chroma-key 背景，再使用本機 helper 移除背景。
+一般透明背景需求優先使用 `gpt-image-2` 產生單色 chroma-key 背景，再使用本機 helper 移除背景。
 
-只有在使用者明確要求 true native transparency，或影像內容不適合 chroma-key removal，例如毛髮、煙霧、玻璃、液體、透明材質或反光物件時，才應確認後改用 CLI fallback。
+只有在使用者明確要求 true native transparency，或影像內容不適合 chroma-key removal，例如毛髮、煙霧、玻璃、液體、透明材質或反光物件時，才應確認後改用 `gpt-image-1.5` true-transparency 路徑。
 
 `gpt-image-2` 不支援 `background=transparent`。若需要 true native transparency，請使用 Azure OpenAI 的 `gpt-image-1.5` deployment，並搭配：
 
@@ -189,7 +186,7 @@ python "$IMAGE_GEN" generate \
 ## 參考文件
 
 - `SKILL.md`：skill 的主要規則與工作流程。
-- `references/cli.md`：fallback CLI 使用細節。
+- `references/cli.md`：CLI 使用細節。
 - `references/image-api.md`：Azure OpenAI Image API 參數與 endpoint 說明。
 - `references/prompting.md`：提示詞設計建議。
 - `references/sample-prompts.md`：常見使用情境提示詞範本。
