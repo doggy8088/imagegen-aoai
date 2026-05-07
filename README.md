@@ -127,6 +127,56 @@ node "$IMAGE_GEN" generate-batch \
   --concurrency 5
 ```
 
+#### JSONL 格式
+
+`generate-batch --input` 讀取 JSONL（JSON Lines）檔案：每一行是一個獨立的產圖工作。空行與 `#` 開頭的註解行會被忽略，最多可包含 500 個工作。
+
+每行可以使用下列兩種格式之一：
+
+```jsonl
+{"prompt":"Gray wolf in profile in a snowy forest"}
+Gray wolf in profile in a snowy forest
+```
+
+物件格式必須包含 `prompt`，且 `prompt` 不能是空字串。純文字行會自動視為該工作的 `prompt`。
+
+JSONL 中的屬性會覆蓋 CLI 參數或預設值；未指定的屬性會沿用 CLI 參數或預設值。例如可在 CLI 指定共用的 `--quality medium`，再於特定 JSONL 行用 `"quality":"high"` 覆蓋。
+
+| JSONL 屬性 | 必填 | 說明 |
+| --- | --- | --- |
+| `prompt` | 是 | 此工作使用的文字提示詞。純文字行等同於只設定 `prompt`。 |
+| `model` | 否 | Azure OpenAI image deployment name。未指定時使用 `--model` 或 `IMAGEGEN_AZURE_OPENAI_IMAGE_DEPLOYMENT`。 |
+| `size` | 否 | 輸出尺寸。可用 `auto` 或 `WIDTHxHEIGHT`，例如 `1024x1024`、`1536x1024`。 |
+| `quality` | 否 | `low`、`medium`、`high` 或 `auto`。 |
+| `background` | 否 | `transparent`、`opaque` 或 `auto`。注意預設 `gpt-image-2` 不支援 `transparent`。 |
+| `output_format` | 否 | `png`、`jpeg`、`jpg` 或 `webp`；`jpg` 會正規化為 `jpeg`。 |
+| `output_compression` | 否 | 輸出壓縮率，整數 `0` 到 `100`。 |
+| `moderation` | 否 | 傳給 Image API 的 moderation 值。 |
+| `n` | 否 | 同一個 prompt 產生的變體數，整數 `1` 到 `10`。多個不同資產應使用多行 job，而不是只增加 `n`。 |
+| `out` | 否 | 此工作的輸出檔名。批次模式會把它視為 `--out-dir` 底下的檔名，目錄部分會被忽略。未指定時會依序號與 prompt 自動產生檔名。 |
+| `use_case` | 否 | Prompt augmentation 欄位；描述用途或情境。 |
+| `scene` | 否 | Prompt augmentation 欄位；描述場景或背景。 |
+| `subject` | 否 | Prompt augmentation 欄位；描述主體。 |
+| `style` | 否 | Prompt augmentation 欄位；描述風格或媒材。 |
+| `composition` | 否 | Prompt augmentation 欄位；描述構圖、鏡位或 framing。 |
+| `lighting` | 否 | Prompt augmentation 欄位；描述光線或氛圍。 |
+| `palette` | 否 | Prompt augmentation 欄位；描述色彩配置。 |
+| `materials` | 否 | Prompt augmentation 欄位；描述材質或紋理。 |
+| `text` | 否 | Prompt augmentation 欄位；指定影像中要出現的文字。 |
+| `constraints` | 否 | Prompt augmentation 欄位；描述必須遵守的限制。 |
+| `negative` | 否 | Prompt augmentation 欄位；描述要避免的內容。 |
+| `fields` | 否 | 另一種提供 prompt augmentation 欄位的方式，例如 `"fields":{"style":"studio photo","constraints":"no watermark"}`。同一層的 augmentation 欄位會覆蓋 `fields` 內的同名欄位。 |
+
+完整範例：
+
+```jsonl
+{"prompt":"Cavernous hangar interior with a compact shuttle parked near the center","use_case":"stylized-concept","composition":"wide-angle, low-angle","lighting":"volumetric light rays through drifting fog","constraints":"no logos or trademarks; no watermark","size":"1536x1024","quality":"high","out":"hangar.png"}
+{"prompt":"Gray wolf in profile in a snowy forest","fields":{"use_case":"photorealistic-natural","composition":"eye-level","constraints":"no logos or trademarks; no watermark"},"size":"1024x1024","output_format":"png"}
+{"prompt":"Three visual variants of a cozy alpine cabin at dawn","n":3,"out":"alpine-cabin.png"}
+```
+
+若使用 `gpt-image-2` 並指定明確尺寸，尺寸還必須符合模型限制：寬高都要是 16 的倍數、長邊不超過 3840px、長短邊比例不超過 3:1，總像素數需介於 655,360 到 8,294,400 之間。
+
 ## 預設值
 
 | 設定 | 預設值 |
